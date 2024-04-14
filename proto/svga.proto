@@ -10,18 +10,28 @@ message MovieParams {
     int32 frames = 4;           // 动画总帧数
 }
 
+message MovieEntity {
+
+    string version = 1;                 // SVGA 格式版本号
+    MovieParams params = 2;             // 动画参数
+    map<string, bytes> images = 3;      // Key 是位图键名，Value 是位图文件名或二进制 PNG 数据。
+    repeated SpriteEntity sprites = 4;  // 元素列表
+    repeated AudioEntity audios = 5;    // 音频列表
+
+}
+
 message SpriteEntity {
     string imageKey = 1;                // 元件所对应的位图键名, 如果 imageKey 含有 .vector 后缀，该 sprite 为矢量图层 含有 .matte 后缀，该 sprite 为遮罩图层。
     repeated FrameEntity frames = 2;    // 帧列表
     string matteKey = 3;                // 被遮罩图层的 matteKey 对应的是其遮罩图层的 imageKey.
 }
 
-message AudioEntity {
-    string audioKey = 1;        // 音频文件名
-    int32 startFrame = 2;       // 音频播放起始帧
-    int32 endFrame = 3;         // 音频播放结束帧
-    int32 startTime = 4;        // 音频播放起始时间（相对音频长度）
-    int32 totalTime = 5;        // 音频总长度
+message FrameEntity {
+    float alpha = 1;                    // 透明度
+    Layout layout = 2;                  // 初始约束大小
+    Transform transform = 3;            // 2D 变换矩阵
+    string clipPath = 4;                // 遮罩路径，使用 SVG 标准 Path 绘制图案进行 Mask 遮罩。
+    repeated ShapeEntity shapes = 5;                // 矢量元素列表
 }
 
 message Layout {
@@ -109,23 +119,12 @@ message ShapeEntity {
     }                                   // 矢量参数
     ShapeStyle styles = 10;             // 渲染参数
     Transform transform = 11;           // 矢量图层 2D 变换矩阵
-    
 }
 
-message FrameEntity {
-    float alpha = 1;                    // 透明度
-    Layout layout = 2;                  // 初始约束大小
-    Transform transform = 3;            // 2D 变换矩阵
-    string clipPath = 4;                // 遮罩路径，使用 SVG 标准 Path 绘制图案进行 Mask 遮罩。
-    repeated ShapeEntity shapes = 5;                // 矢量元素列表
-}
-
-message MovieEntity {
-
-    string version = 1;                 // SVGA 格式版本号
-    MovieParams params = 2;             // 动画参数
-    map<string, bytes> images = 3;      // Key 是位图键名，Value 是位图文件名或二进制 PNG 数据。
-    repeated SpriteEntity sprites = 4;  // 元素列表
-    repeated AudioEntity audios = 5;    // 音频列表
-
+message AudioEntity {
+    string audioKey = 1;        // 音频文件名
+    int32 startFrame = 2;       // 音频播放起始帧
+    int32 endFrame = 3;         // 音频播放结束帧
+    int32 startTime = 4;        // 音频播放起始时间（相对音频长度）
+    int32 totalTime = 5;        // 音频总长度
 }
